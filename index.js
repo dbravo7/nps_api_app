@@ -2,7 +2,6 @@
 
 $(document).ready(function () {
 
-
   $('form').submit(event => {
     event.preventDefault(); 
     // the const states is an array of state codes 
@@ -11,13 +10,16 @@ $(document).ready(function () {
 
     const max_num = parseInt($('#js-max-results').val());
   
-  })
+  });
 
   function stateCodes(event) {
     let codes = []; 
-  
-    codes.push($('#js-state').val());
-    return codes; 
+    
+    codes.push($('#js-state-1').val().toUpperCase());
+    codes.push($('#js-state-2').val().toUpperCase());
+    codes.push($('#js-state-3').val().toUpperCase());
+    const states = codes.filter(ele => ele !== "" );
+    return states; 
   }
 
   function validStateCodes(states) {
