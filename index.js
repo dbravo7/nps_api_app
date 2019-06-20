@@ -5,11 +5,11 @@ function watchForm() {
     event.preventDefault(); 
 
     const state = stateCode(event);
-    validStateCode(state);
-
     const max_num = parseInt($('#js-max-results').val());
-    
-    getParkInfo(state, max_num);
+   
+    if  (validStateCode(state)) {
+      getParkInfo(state, max_num);
+    }
   });
 }
 
@@ -32,13 +32,14 @@ function validStateCode(state) {
 
   if (!(stateAbbreviations.includes(state[0]))) {
     alert('Invalid state name. Please enter abbreviated form of a state name.');
+    return false;
   }
+  return true; 
 }
 
 function getParkInfo(state, max_num) {
-  const key = "&api_key=3s2cp4J69269b5elC49u4e5cG3xkZMJwTiA5mGJp";
-  const queryString = createParamsString(state, max_num);
-  const url = "https://developer.nps.gov/api/v1/parks?" + queryString + key;
+  const key = "3s2cp4J69269b5elC49u4e5cG3xkZMJwTiA5mGJp";
+  const url = `https://developer.nps.gov/api/v1/parks?stateCode=${state}&limit=${max_num}&api_key=${key}`;
 
   console.log(url);
 
@@ -54,16 +55,6 @@ function getParkInfo(state, max_num) {
       $('section').addClass('hidden');
       $('#js-error-message').text(`Something went wrong: ${error.message}`);
     });
-}
-
-function createParamsString(state, max_num) {
-  let string_collection = [];
-
-  for (let i = 0; i < state.length; i++) {
-    string_collection.push(`stateCode=${state[i]}`);
-  }
-  string_collection.push(`limit=${max_num}`);
-  return string_collection.join('&');
 }
 
 function displayResults(response) {
