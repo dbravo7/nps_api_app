@@ -3,27 +3,25 @@
 function watchForm() {
   $('form').submit(event => {
     event.preventDefault(); 
-    // the states variable is an array of state codes 
-    const states = stateCodes(event);
-    validStateCodes(states);
+
+    const state = stateCode(event);
+    validStateCode(state);
 
     const max_num = parseInt($('#js-max-results').val());
     
-    getParkInfo(states, max_num);
+    getParkInfo(state, max_num);
   });
 }
 
-function stateCodes(event) {
+function stateCode(event) {
   let codes = []; 
   
   codes.push($('#js-state-1').val().toUpperCase());
-  codes.push($('#js-state-2').val().toUpperCase());
-  codes.push($('#js-state-3').val().toUpperCase());
-  const states = codes.filter(ele => ele !== "" );
-  return states; 
+  const state = codes.filter(ele => ele !== "" );
+  return state; 
 }
 
-function validStateCodes(states) {
+function validStateCode(state) {
   const stateAbbreviations = [
     'AL', 'AK', 'AS', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'DC', 'FM', 'FL', 'GA',
     'GU', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MH', 'MD', 'MA',
@@ -32,27 +30,16 @@ function validStateCodes(states) {
     'VT', 'VI', 'VA', 'WA', 'WV', 'WI', 'WY'
   ];
 
-  if (states === undefined || states.length === 0) {
-    alert('Please input a state name.'); 
+  if (!(stateAbbreviations.includes(state[0]))) {
+    alert('Invalid state name. Please enter abbreviated form of a state name.');
   }
-
-  states.forEach(function(state) {
-    if (!(stateAbbreviations.includes(state))) {
-      alert('Invalid state name. Please enter abbreviated form of state name.');
-    }
-  }); 
-  
 }
 
-function getParkInfo(states, max_num) {
-  // const key = "&api_key=3s2cp4J69269b5elC49u4e5cG3xkZMJwTiA5mGJp";
-  const queryString = createParamsString(states, max_num);
-  const url = "https://developer.nps.gov/api/v1/parks?" + queryString;
+function getParkInfo(state, max_num) {
+  const key = "&api_key=3s2cp4J69269b5elC49u4e5cG3xkZMJwTiA5mGJp";
+  const queryString = createParamsString(state, max_num);
+  const url = "https://developer.nps.gov/api/v1/parks?" + queryString + key;
 
-  const options = {
-    headers: new Headers({
-      "X-Api-Key": "3s2cp4J69269b5elC49u4e5cG3xkZMJwTiA5mGJp"})
-  };
   console.log(url);
 
   fetch(url)
@@ -69,11 +56,11 @@ function getParkInfo(states, max_num) {
     });
 }
 
-function createParamsString(states, max_num) {
+function createParamsString(state, max_num) {
   let string_collection = [];
 
-  for (let i = 0; i < states.length; i++) {
-    string_collection.push(`stateCode=${states[i]}`)
+  for (let i = 0; i < state.length; i++) {
+    string_collection.push(`stateCode=${state[i]}`);
   }
   string_collection.push(`limit=${max_num}`);
   return string_collection.join('&');
