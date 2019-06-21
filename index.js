@@ -4,7 +4,6 @@ function watchForm() {
   $('form').submit(event => {
     event.preventDefault();
     // the const states is an array of state codes 
-    // the states variable is an array of state codes 
     const states = stateCodes(event);
     const max_num = parseInt($('#js-max-results').val());
 
@@ -109,10 +108,10 @@ function displayResults(response) {
     $('.results').append(
       `<li><h3>${response.data[i].fullName}</h3>
       <p>${response.data[i].description}</p> 
-      <a href=${response.data[i].url}>Go to website</a>`
-  )}
-    $('section').removeClass('hidden');
+      <a href=${response.data[i].url}>Go to website</a>`);
   }
+  $('section').removeClass('hidden');
+}
 
 function removeResults() {
   $('.results').empty();
